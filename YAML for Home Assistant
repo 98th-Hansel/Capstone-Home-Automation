@@ -1,0 +1,136 @@
+esphome:
+  name: esp32
+  friendly_name: ESP32
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "Wkoa/oC/boMC/TD6SH/o7bnC3DTw6tQwbDpmqtife2I="
+
+ota:
+  password: "5b05b961eadf1101c6a73ae687881bd1"
+
+i2c:
+
+# Example configuration entry
+sensor:
+  - platform: bh1750
+    name: "BH1750 Illuminance"
+    address: 0x23
+    update_interval: 5s
+
+  - platform: bme280
+    temperature:
+      name: "BME280 Temperature"
+      oversampling: 16x
+    humidity:
+      name: "BME280 Humidity"
+    address: 0x76
+    update_interval: 5s
+
+  - platform: ld2410
+    moving_distance:
+      name : Moving Distance
+    still_distance:
+      name: Still Distance
+    moving_energy:
+      name: Move Energy
+    still_energy:
+      name: Still Energy
+    detection_distance:
+      name: Detection Distance
+
+binary_sensor:
+  - platform: gpio
+    pin: 23
+    name: "GPIO3-TX Motion"
+    device_class: motion
+
+  - platform: ld2410
+    has_target:
+      name: Presence
+    has_moving_target:
+      name: Moving Target
+    has_still_target:
+      name: Still Target
+      
+# Example configuration entry
+output:
+  - platform: ledc
+    id: motor_forward_pin
+    pin: GPIO27
+  - platform: ledc
+    id: motor_reverse_pin
+    pin: GPIO26
+  - platform: ledc
+    id: motor_enable
+    pin: GPIO14
+
+fan:
+  - platform: hbridge
+    id: my_fan
+    name: "Living Room Fan"
+    pin_a: motor_forward_pin
+    pin_b: motor_reverse_pin
+    enable_pin: motor_enable
+    decay_mode: slow
+
+  - platform: hbridge
+    id: my_fanreverse
+    name: "Living Room Fan Reverse"
+    pin_b: motor_forward_pin
+    pin_a: motor_reverse_pin
+    enable_pin: motor_enable
+    decay_mode: slow
+
+
+wifi:
+  ssid: OnePlus3
+  password: freetibet123
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Esp32 Fallback Hotspot"
+    password: "DAztEn1tmfI0"
+
+captive_portal:
+
+# Example configuration entry
+uart:
+  id: uart1
+  tx_pin: 27
+  rx_pin: 26
+  baud_rate: 256000
+  parity: NONE
+  stop_bits: 1
+
+ld2410:
+  timeout: 150s
+  max_move_distance : 6m
+  max_still_distance: 0.75m
+  g0_move_threshold: 10
+  g0_still_threshold: 20
+  g1_move_threshold: 10
+  g1_still_threshold: 20
+  g2_move_threshold: 20
+  g2_still_threshold: 21
+  g3_move_threshold: 30
+  g3_still_threshold: 31
+  g4_move_threshold: 40
+  g4_still_threshold: 41
+  g5_move_threshold: 50
+  g5_still_threshold: 51
+  g6_move_threshold: 60
+  g6_still_threshold: 61
+  g7_move_threshold: 70
+  g7_still_threshold: 71
+  g8_move_threshold: 80
+  g8_still_threshold: 81
